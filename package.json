@@ -1,22 +1,30 @@
 {
-  "name": "@animeswap.org/v1-sdk",
+  "name": "dzungdinh94/@financer.org/v1-sdk",
   "version": "1.2.1",
-  "description": "SDK for use any functions of AnimeSwap v1 Protocol",
-  "repository": "https://github.com/AnimeSwap/v1-sdk",
+  "description": "SDK for use any functions of Financer v1 Protocol",
+  "repository": "https://github.com/financer-exchange/financer-v1-sdk",
   "license": "GPL-3.0-or-later",
   "keywords": [
-    "animeswap",
+    "financer",
     "defi",
     "swap",
     "aptos",
     "v1",
     "sdk"
   ],
+  "author": {
+    "name": "dzungdinh94",
+    "email": "dungnd8594@gmail.com"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/yourOrganizationOrAccount"
+  },
   "engines" : { 
     "node" : ">=16.0.0"
   },
   "main": "./dist/tsc/main.js",
   "types": "./dist/tsc/main.d.ts",
+  
   "scripts": {
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
