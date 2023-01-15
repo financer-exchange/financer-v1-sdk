@@ -1,5 +1,5 @@
 import SDK, { NetworkType } from '../main'
-const coinType = '0x796900ebe1a1a54ff9e932f19c548f5c1af5c6e7d34965857ac2f7b1d1ab2cbf::LPCoinV1::LPCoin<0x1::aptos_coin::AptosCoin,0x16fe2df00ea7dde4a63409201f7f4e536bde7bb7335526a35d05111e68aa322c::AnimeCoin::ANI>'
+const coinType = '0x5835dabd0cdfae7fe3d19715a05793727cbd523b3d9976c2a52f44b929ebb106::LPCoinV1::LPCoin<0x1::aptos_coin::AptosCoin,0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::AnimeCoin::ANI>'
 const userAddress = '0x2c5ebdd44fd5eac6382e53319a8fae35b87c3b25903c8b44ed35f9db63746538'
 
 describe('Masterchef Module', () => {

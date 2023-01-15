@@ -21,7 +21,7 @@ describe('Swap Module', () => {
   })
 
   test('getAllLPCoinResourcesByAddress', async () => {
-    const address = '0x16fe2df00ea7dde4a63409201f7f4e536bde7bb7335526a35d05111e68aa322c'
+    const address = '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6'
     const output = await sdk.swap.getAllLPCoinResourcesByAddress(address)
     console.log(output)
     expect(1).toBe(1)
