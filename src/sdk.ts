@@ -17,7 +17,7 @@ export type SdkOptions = {
       Scripts: AptosResourceType
       ResourceAccountAddress: AptosResourceType
       DeployerAddress: AptosResourceType
-      AniAddress: AptosResourceType
+      FinAddress: AptosResourceType
       MasterChefScripts: AptosResourceType
       MasterChefDeployerAddress: AptosResourceType
       MasterChefResourceAccountAddress: AptosResourceType
@@ -91,13 +91,13 @@ export class SDK {
     const mainnetOptions = {
       nativeCoin: '0x1::aptos_coin::AptosCoin',
       modules: {
-        Scripts: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::AnimeSwapPoolV1',
+        Scripts: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::FinancerPoolV1',
         CoinInfo: '0x1::coin::CoinInfo',
         CoinStore: '0x1::coin::CoinStore',
         DeployerAddress: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6',
         ResourceAccountAddress: '0x5835dabd0cdfae7fe3d19715a05793727cbd523b3d9976c2a52f44b929ebb106',
-        AniAddress: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::AnimeCoin::ANI',
-        MasterChefScripts: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::AnimeMasterChefV1',
+        FinAddress: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::FinancerCoin::FIN',
+        MasterChefScripts: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::FinancerMasterChefV1',
         MasterChefDeployerAddress: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6',
         MasterChefResourceAccountAddress: '0x8615f5671592532631e56c76ca09d332fae1cd03d463bc379eec1007973966ef',
       },
@@ -114,13 +114,13 @@ export class SDK {
     const devnetOptions = {
       nativeCoin: '0x1::aptos_coin::AptosCoin',
       modules: {
-        Scripts: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::AnimeSwapPoolV1',
+        Scripts: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::FinancerPoolV1',
         CoinInfo: '0x1::coin::CoinInfo',
         CoinStore: '0x1::coin::CoinStore',
         DeployerAddress: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6',
         ResourceAccountAddress: '0x5835dabd0cdfae7fe3d19715a05793727cbd523b3d9976c2a52f44b929ebb106',
-        AniAddress: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::AnimeCoin::ANI',
-        MasterChefScripts: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::AnimeMasterChefV1',
+        FinAddress: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::FinancerCoin::FIN',
+        MasterChefScripts: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::FinancerMasterChefV1',
         MasterChefDeployerAddress: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6',
         MasterChefResourceAccountAddress: '0x8615f5671592532631e56c76ca09d332fae1cd03d463bc379eec1007973966ef',
       },
@@ -131,19 +131,19 @@ export class SDK {
         AutoAniResourceAccountAddress: '0x453989b1e41bb442c833314f6ffc8572e3670c1a40a6c8a6e52ea7c588c72fd7',
       },
       coins: {
-        zUSDC: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::AnimeCoin::ANI',
+        zUSDC: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::FinancerCoin::FIN',
       },
     }
     const testnetOptions = {
       nativeCoin: '0x1::aptos_coin::AptosCoin',
       modules: {
-        Scripts: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::AnimeSwapPoolV1f1',
+        Scripts: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::FinancerPoolV1f1',
         CoinInfo: '0x1::coin::CoinInfo',
         CoinStore: '0x1::coin::CoinStore',
         DeployerAddress: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6',
         ResourceAccountAddress: '0x5835dabd0cdfae7fe3d19715a05793727cbd523b3d9976c2a52f44b929ebb106',
-        AniAddress: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::AnimeCoin::ANI',
-        MasterChefScripts: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::AnimeMasterChefV1f1',
+        FinAddress: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::FinancerCoin::FIN',
+        MasterChefScripts: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::FinancerMasterChefV1f1',
         MasterChefDeployerAddress: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6',
         MasterChefResourceAccountAddress: '0xc5c50013e5a1c04a665a879a06479c9ac11495f23a4c973af9c395c189763fde',
       },
@@ -154,7 +154,7 @@ export class SDK {
         AutoAniResourceAccountAddress: '0xdfee246b309af2e34e11c4f10119ac177185a6737ba05ad4377245d8164e669d',
       },
       coins: {
-        zUSDC: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::AnimeCoin::ANI',  // dummy
+        zUSDC: '0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::FinancerCoin::FIN',  // dummy
       },
     }
     let networkOptions = mainnetOptions  // default network

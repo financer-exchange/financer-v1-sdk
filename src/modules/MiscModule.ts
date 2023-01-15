@@ -149,16 +149,16 @@ export class MiscModule implements IModule {
   // equal to contract `balance_of()`
   async _autoAniBalanceOf() {
     const { modules, misc } = this.sdk.networkOptions
-    const userInfoReturn = await this.sdk.MasterChef.getUserInfoByCoinType(misc.AutoAniResourceAccountAddress, modules.AniAddress)
-    const raBalance = await this.getBalance(misc.AutoAniResourceAccountAddress, modules.AniAddress)
+    const userInfoReturn = await this.sdk.MasterChef.getUserInfoByCoinType(misc.AutoAniResourceAccountAddress, modules.FinAddress)
+    const raBalance = await this.getBalance(misc.AutoAniResourceAccountAddress, modules.FinAddress)
     return raBalance.add(userInfoReturn.amount)
   }
 
   // equal to contract `leave_staking()` then `available()`
   async _autoAniAvalableAfterLeaveStaking() {
     const { modules, misc } = this.sdk.networkOptions
-    const userInfoReturn = await this.sdk.MasterChef.getUserInfoByCoinType(misc.AutoAniResourceAccountAddress, modules.AniAddress)
-    const raBalance = await this.getBalance(misc.AutoAniResourceAccountAddress, modules.AniAddress)
+    const userInfoReturn = await this.sdk.MasterChef.getUserInfoByCoinType(misc.AutoAniResourceAccountAddress, modules.FinAddress)
+    const raBalance = await this.getBalance(misc.AutoAniResourceAccountAddress, modules.FinAddress)
     return raBalance.add(userInfoReturn.pendingAni)
   }
 

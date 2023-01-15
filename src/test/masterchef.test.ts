@@ -12,7 +12,7 @@ describe('Masterchef Module', () => {
   })
 
   test('getPoolInfoByCoinType', async () => {
-    const output = await sdk.MasterChef.getPoolInfoByCoinType(sdk.networkOptions.modules.AniAddress)
+    const output = await sdk.MasterChef.getPoolInfoByCoinType(sdk.networkOptions.modules.FinAddress)
     console.log(output)
     expect(Number(output.alloc_point)).toBeGreaterThan(0)
   })
@@ -30,7 +30,7 @@ describe('Masterchef Module', () => {
   })
 
   test('getUserInfoByCoinType', async () => {
-    const output = await sdk.MasterChef.getUserInfoByCoinType(userAddress, sdk.networkOptions.modules.AniAddress)
+    const output = await sdk.MasterChef.getUserInfoByCoinType(userAddress, sdk.networkOptions.modules.FinAddress)
     console.log(output)
     expect(1).toBe(1)
   })

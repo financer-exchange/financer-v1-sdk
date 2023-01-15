@@ -250,7 +250,7 @@ export class MasterChefModule implements IModule {
   async getFirstTwoPairStakedLPInfo() : Promise<Array<StakedLPInfo>> {
     const { modules } = this.sdk.networkOptions
     const mcData = await this.getMasterChefData()
-    const ani = modules.AniAddress
+    const ani = modules.FinAddress
     const zUSDC = this.sdk.networkOptions.coins.zUSDC
     // <APT, ANI>
     const pair: CoinPair = {
@@ -349,7 +349,7 @@ export class MasterChefModule implements IModule {
    */
   async checkRegisteredANI(address: AptosResourceType): Promise<boolean> {
     const { modules } = this.sdk.networkOptions
-    const coinStoreLP = composeCoinStore(modules.CoinStore, modules.AniAddress)
+    const coinStoreLP = composeCoinStore(modules.CoinStore, modules.FinAddress)
     try {
       const lpCoinStore = await this.sdk.resources.fetchAccountResource<AptosCoinStoreResource>(address, coinStoreLP)
       if (!lpCoinStore) return false
@@ -361,7 +361,7 @@ export class MasterChefModule implements IModule {
 
   // Register ANI payload
   registerANIPayload(): Payload {
-    const functionName = composeANIRegister(this.sdk.networkOptions.modules.AniAddress)
+    const functionName = composeANIRegister(this.sdk.networkOptions.modules.FinAddress)
 
     return {
       type: 'entry_function_payload',
