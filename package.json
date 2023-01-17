@@ -1,6 +1,6 @@
 {
   "name": "financer-sdk-v1",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "SDK for use any functions of Financer v1 Protocol",
   "repository": "https://github.com/financer-exchange/financer-v1-sdk",
   "license": "GPL-3.0-or-later",
