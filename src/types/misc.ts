@@ -12,14 +12,14 @@ export type AirdropResource = {
   }
 }
 
-export type AutoAniUserInfo = {
+export type AutoFinUserInfo = {
   shares: AptosResourceType
   last_deposited_time: AptosResourceType
-  last_user_action_ANI: AptosResourceType
+  last_user_action_FIN: AptosResourceType
   last_user_action_time: AptosResourceType
 }
 
-export type AutoAniData = {
+export type AutoFinData = {
   total_shares: AptosResourceType
   performance_fee: AptosResourceType
   call_fee: AptosResourceType

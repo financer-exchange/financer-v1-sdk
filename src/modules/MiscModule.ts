@@ -9,18 +9,18 @@ import { d } from '../utils/number'
 import Decimal from 'decimal.js'
 import {
   AirdropResource,
-  AutoAniData,
-  AutoAniUserInfo,
+  AutoFinData,
+  AutoFinUserInfo,
 } from '../types/misc'
 import {
-  composeAutoAniData,
-  composeAutoAniUserInfo,
+  composeAutoFinData,
+  composeAutoFinUserInfo,
   composeCoinStore,
   composeType,
 } from '../utils'
 
-export type AutoAniStakedReturn = {
-  lastUserActionAni: Decimal  // last user action ANI. Deposit value.
+export type AutoFinStakedReturn = {
+  lastUserActionAni: Decimal  // last user action FIN. Deposit value.
   amount: Decimal // current amount. Deposit value + interest
   afterPenaltyAmount: Decimal // after penalty amount. equalt to `amount * (1 - penalty)`
   withdrawFeeFreeTimestamp: Decimal  // after this timestamp, no withdraw_fee penalty
@@ -29,7 +29,7 @@ export type AutoAniStakedReturn = {
   // interest = amount - lastUserActionAni, show this value
 }
 
-export type StakedAutoAniInfo = {
+export type StakedAutoFinInfo = {
   amount: Decimal // total staked amount
 }
 
@@ -82,22 +82,22 @@ export class MiscModule implements IModule {
     }
   }
 
-  // ---------- AutoANI ----------
+  // ---------- AutoFIN ----------
 
   /**
-   * calculate AutoAni account amount, including interest
+   * calculate AutoFin account amount, including interest
    * @param address user address
-   * @returns AutoAniStakedReturn
+   * @returns AutoFinStakedReturn
    */
-  async calculateAutoAniStakedAmount(address: AptosResourceType): Promise<AutoAniStakedReturn> {
-    const autoAniUserInfo = await this._getAutoANIUserInfo(address)
-    const autoAniData = await this._getAutoANIData()
+  async calculateAutoFinStakedAmount(address: AptosResourceType): Promise<AutoFinStakedReturn> {
+    const autoAniUserInfo = await this._getAutoFINUserInfo(address)
+    const autoAniData = await this._getAutoFINData()
     const balanceOf = await this._autoAniBalanceOf()
     const amount = d(autoAniUserInfo.shares).mul(balanceOf).div(autoAniData.total_shares).floor()
     const afterPenaltyAmount = amount.mul(d(10000).sub(autoAniData.withdraw_fee)).div(10000).ceil() // this method use ceil()
     const withdrawFeeFreeTimestamp = d(autoAniUserInfo.last_deposited_time).add(d(autoAniData.withdraw_fee_period))
     return {
-      lastUserActionAni: d(autoAniUserInfo.last_user_action_ANI),
+      lastUserActionAni: d(autoAniUserInfo.last_user_action_FIN),
       amount,
       afterPenaltyAmount,
       withdrawFeeFreeTimestamp,
@@ -106,10 +106,10 @@ export class MiscModule implements IModule {
   }
 
   /**
-   * calculate staked auto ANI info
-   * @returns StakedAutoAniInfo
+   * calculate staked auto FIN info
+   * @returns StakedAutoFinInfo
    */
-  async calculateAutoAniInfo(): Promise<StakedAutoAniInfo> {
+  async calculateAutoFinInfo(): Promise<StakedAutoFinInfo> {
     const balanceOf = await this._autoAniBalanceOf()
     return {
       amount: balanceOf,
@@ -119,52 +119,52 @@ export class MiscModule implements IModule {
   /**
    * calculate harvest call_fee reward
    */
-  async calculateAutoAniHarvestCallFee(): Promise<Decimal> {
-    const autoAniData = await this._getAutoANIData()
+  async calculateAutoFinHarvestCallFee(): Promise<Decimal> {
+    const autoAniData = await this._getAutoFINData()
     const available = await this._autoAniAvalableAfterLeaveStaking()
     const callFee = available.mul(autoAniData.call_fee).div(10000).floor()
     return callFee
   }
 
-  async _getAutoANIUserInfo(address: AptosResourceType): Promise<AutoAniUserInfo> {
+  async _getAutoFINUserInfo(address: AptosResourceType): Promise<AutoFinUserInfo> {
     const { misc } = this.sdk.networkOptions
-    const userInfo = await this.sdk.resources.fetchAccountResource<AutoAniUserInfo>(
+    const userInfo = await this.sdk.resources.fetchAccountResource<AutoFinUserInfo>(
       address,
-      composeAutoAniUserInfo(misc.AutoAniScripts),
+      composeAutoFinUserInfo(misc.AutoFinScripts),
     )
-    if (!userInfo) throw new Error('AutoAni user info resource not found')
+    if (!userInfo) throw new Error('AutoFin user info resource not found')
     return userInfo.data
   }
 
-  async _getAutoANIData(): Promise<AutoAniData> {
+  async _getAutoFINData(): Promise<AutoFinData> {
     const { misc } = this.sdk.networkOptions
-    const data = await this.sdk.resources.fetchAccountResource<AutoAniData>(
-      misc.AutoAniResourceAccountAddress,
-      composeAutoAniData(misc.AutoAniScripts),
+    const data = await this.sdk.resources.fetchAccountResource<AutoFinData>(
+      misc.AutoFinResourceAccountAddress,
+      composeAutoFinData(misc.AutoFinScripts),
     )
-    if (!data) throw new Error('AutoAni data resource not found')
+    if (!data) throw new Error('AutoFin data resource not found')
     return data.data
   }
 
   // equal to contract `balance_of()`
   async _autoAniBalanceOf() {
     const { modules, misc } = this.sdk.networkOptions
-    const userInfoReturn = await this.sdk.MasterChef.getUserInfoByCoinType(misc.AutoAniResourceAccountAddress, modules.FinAddress)
-    const raBalance = await this.getBalance(misc.AutoAniResourceAccountAddress, modules.FinAddress)
+    const userInfoReturn = await this.sdk.MasterChef.getUserInfoByCoinType(misc.AutoFinResourceAccountAddress, modules.FinAddress)
+    const raBalance = await this.getBalance(misc.AutoFinResourceAccountAddress, modules.FinAddress)
     return raBalance.add(userInfoReturn.amount)
   }
 
   // equal to contract `leave_staking()` then `available()`
   async _autoAniAvalableAfterLeaveStaking() {
     const { modules, misc } = this.sdk.networkOptions
-    const userInfoReturn = await this.sdk.MasterChef.getUserInfoByCoinType(misc.AutoAniResourceAccountAddress, modules.FinAddress)
-    const raBalance = await this.getBalance(misc.AutoAniResourceAccountAddress, modules.FinAddress)
+    const userInfoReturn = await this.sdk.MasterChef.getUserInfoByCoinType(misc.AutoFinResourceAccountAddress, modules.FinAddress)
+    const raBalance = await this.getBalance(misc.AutoFinResourceAccountAddress, modules.FinAddress)
     return raBalance.add(userInfoReturn.pendingAni)
   }
 
   autoAniDepositPayload(amount: Decimal | string): Payload {
     const { misc } = this.sdk.networkOptions
-    const functionName = composeType(misc.AutoAniScripts, 'deposit')
+    const functionName = composeType(misc.AutoFinScripts, 'deposit')
     return {
       type: 'entry_function_payload',
       function: functionName,
@@ -175,7 +175,7 @@ export class MiscModule implements IModule {
 
   autoAniWithdrawAllPayload(): Payload {
     const { misc } = this.sdk.networkOptions
-    const functionName = composeType(misc.AutoAniScripts, 'withdraw_all')
+    const functionName = composeType(misc.AutoFinScripts, 'withdraw_all')
     return {
       type: 'entry_function_payload',
       function: functionName,
@@ -186,7 +186,7 @@ export class MiscModule implements IModule {
 
   autoAniWithdrawPayload(shares: Decimal | string): Payload {
     const { misc } = this.sdk.networkOptions
-    const functionName = composeType(misc.AutoAniScripts, 'withdraw')
+    const functionName = composeType(misc.AutoFinScripts, 'withdraw')
     return {
       type: 'entry_function_payload',
       function: functionName,
@@ -197,7 +197,7 @@ export class MiscModule implements IModule {
 
   autoAniHarvestPayload(): Payload {
     const { misc } = this.sdk.networkOptions
-    const functionName = composeType(misc.AutoAniScripts, 'harvest')
+    const functionName = composeType(misc.AutoFinScripts, 'harvest')
     return {
       type: 'entry_function_payload',
       function: functionName,

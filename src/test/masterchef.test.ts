@@ -1,5 +1,5 @@
 import SDK, { NetworkType } from '../main'
-const coinType = '0x5835dabd0cdfae7fe3d19715a05793727cbd523b3d9976c2a52f44b929ebb106::LPCoinV1::LPCoin<0x1::aptos_coin::AptosCoin,0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::AnimeCoin::ANI>'
+const coinType = '0x5835dabd0cdfae7fe3d19715a05793727cbd523b3d9976c2a52f44b929ebb106::LPCoinV1::LPCoin<0x1::aptos_coin::AptosCoin,0x8f3fd4fa708e5b3bff4019b801d2d3d0ae16cf430440fff32ede61c09e001ec6::FinancerCoin::FIN>'
 const userAddress = '0x2c5ebdd44fd5eac6382e53319a8fae35b87c3b25903c8b44ed35f9db63746538'
 
 describe('Masterchef Module', () => {
@@ -47,18 +47,18 @@ describe('Masterchef Module', () => {
     expect(1).toBe(1)
   })
 
-  test('checkRegisteredANI true', async () => {
-    const output = await sdk.MasterChef.checkRegisteredANI(sdk.networkOptions.modules.MasterChefDeployerAddress)
+  test('checkRegisteredFIN true', async () => {
+    const output = await sdk.MasterChef.checkRegisteredFIN(sdk.networkOptions.modules.MasterChefDeployerAddress)
     expect(output).toBe(true)
   })
 
-  test('checkRegisteredANI false', async () => {
-    const output = await sdk.MasterChef.checkRegisteredANI(sdk.networkOptions.modules.ResourceAccountAddress)
+  test('checkRegisteredFIN false', async () => {
+    const output = await sdk.MasterChef.checkRegisteredFIN(sdk.networkOptions.modules.ResourceAccountAddress)
     expect(output).toBe(false)
   })
 
-  test('registerANIPayload', async () => {
-    const output = sdk.MasterChef.registerANIPayload()
+  test('registerFINPayload', async () => {
+    const output = sdk.MasterChef.registerFINPayload()
     console.log(output)
     expect(1).toBe(1)
   })
@@ -73,8 +73,8 @@ describe('Masterchef Module', () => {
     expect(1).toBe(1)
   })
 
-  test('stakeANIPayload', async () => {
-    const output = sdk.MasterChef.stakeANIPayload({
+  test('stakeFINPayload', async () => {
+    const output = sdk.MasterChef.stakeFINPayload({
       amount: '100000000',
       method: 'enter_staking',
     })

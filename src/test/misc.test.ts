@@ -25,23 +25,23 @@ describe('Misc Module', () => {
     expect(1).toBe(1)
   })
 
-  // ---------- AutoANI ----------
+  // ---------- AutoFIN ----------
 
-  test('calculateAutoAniStakedAmount', async () => {
+  test('calculateAutoFinStakedAmount', async () => {
     const address2 = '0x22cc4039c75fe85472ec4817f0962abe42cd2c765691705b98314cf44d5eb49e'
-    const output = await sdk.Misc.calculateAutoAniStakedAmount(address2)
+    const output = await sdk.Misc.calculateAutoFinStakedAmount(address2)
     console.log(output)
     expect(1).toBe(1)
   })
 
-  test('calculateAutoAniHarvestCallFee', async () => {
-    const output = await sdk.Misc.calculateAutoAniHarvestCallFee()
+  test('calculateAutoFinHarvestCallFee', async () => {
+    const output = await sdk.Misc.calculateAutoFinHarvestCallFee()
     console.log(output)
     expect(1).toBe(1)
   })
 
-  test('calculateAutoAniInfo', async () => {
-    const output = await sdk.Misc.calculateAutoAniInfo()
+  test('calculateAutoFinInfo', async () => {
+    const output = await sdk.Misc.calculateAutoFinInfo()
     console.log(output)
     expect(1).toBe(1)
   })
@@ -60,8 +60,8 @@ describe('Misc Module', () => {
 
   test('autoAniWithdrawPayload', async () => {
     const address2 = '0x22cc4039c75fe85472ec4817f0962abe42cd2c765691705b98314cf44d5eb49e'
-    const output = await sdk.Misc.calculateAutoAniStakedAmount(address2)
-    const withdrawAmount = 123e8  // assume user want to withdraw 123 ANI, assert 0 < withdrawAmount < output.amount
+    const output = await sdk.Misc.calculateAutoFinStakedAmount(address2)
+    const withdrawAmount = 123e8  // assume user want to withdraw 123 FIN, assert 0 < withdrawAmount < output.amount
     let shares = d(withdrawAmount).mul(output.shares).div(output.amount).ceil()
     if (shares.gt(output.shares)) {
       shares = output.shares

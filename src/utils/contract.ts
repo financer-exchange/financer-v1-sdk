@@ -15,7 +15,7 @@ function cmp(a: number, b: number) {
   }
 }
 
-// AnimeSwap define `<` :
+// Financer define `<` :
 // 1. length(CoinType1) < length(CoinType1)
 // 2. length(CoinType1) == length(CoinType1) && String(CoinType1) < String(CoinType2)
 function compare(symbolX: string, symbolY: string) {

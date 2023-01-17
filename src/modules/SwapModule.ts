@@ -524,7 +524,7 @@ export class SwapModule implements IModule {
   }
 
   /**
-   * The function will return all pairs created in AnimeSwap, with CoinX and CoinY full name
+   * The function will return all pairs created in Financer, with CoinX and CoinY full name
    * @returns all pairs
    */
   async getAllPairs(): Promise<CoinPair[]> {
@@ -548,7 +548,7 @@ export class SwapModule implements IModule {
   }
 
   /**
-   * The function will return all pairs created in AnimeSwap, with coin full name and reserve meta
+   * The function will return all pairs created in Financer, with coin full name and reserve meta
    * @returns 
    */
   async getAllLPCoinResourcesWithAdmin(): Promise<LiquidityPoolResource[]> {

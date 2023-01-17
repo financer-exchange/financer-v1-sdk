@@ -1,23 +1,23 @@
-# AnimeSwap v1 Protocol SDK
+# Financer v1 Protocol SDK
 
-[![Lint and Test](https://github.com/AnimeSwap/v1-sdk/actions/workflows/lint-and-test.yml/badge.svg)](https://github.com/AnimeSwap/v1-sdk/actions/workflows/lint-and-test.yml/badge.svg)
-[![npm version](https://img.shields.io/npm/v/@animeswap.org/v1-sdk/latest.svg)](https://img.shields.io/npm/v/@animeswap.org/v1-sdk/latest.svg)
-[![npm bundle size](https://img.shields.io/bundlephobia/minzip/@animeswap.org/v1-sdk/latest.svg)](https://img.shields.io/bundlephobia/minzip/@animeswap.org/v1-sdk/latest.svg)
-[![downloads](https://img.shields.io/npm/dm/@animeswap.org/v1-sdk)](https://img.shields.io/npm/dm/@animeswap.org/v1-sdk)
+[![Lint and Test](https://github.com/Financer/v1-sdk/actions/workflows/lint-and-test.yml/badge.svg)](https://github.com/Financer/v1-sdk/actions/workflows/lint-and-test.yml/badge.svg)
+[![npm version](https://img.shields.io/npm/v/@Financer.org/v1-sdk/latest.svg)](https://img.shields.io/npm/v/@Financer.org/v1-sdk/latest.svg)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/@Financer.org/v1-sdk/latest.svg)](https://img.shields.io/bundlephobia/minzip/@Financer.org/v1-sdk/latest.svg)
+[![downloads](https://img.shields.io/npm/dm/@Financer.org/v1-sdk)](https://img.shields.io/npm/dm/@Financer.org/v1-sdk)
 
-The typescript SDK for [AnimeSwap](https://animeswap.org) v1 protocol.
+The typescript SDK for [Financer](https://Financer.org) v1 protocol.
 
-* [SDK documents](https://docs.animeswap.org/docs/sdk)
-* [Contracts documents](https://docs.animeswap.org/docs/contracts)
+* [SDK documents](https://docs.Financer.org/docs/sdk)
+* [Contracts documents](https://docs.Financer.org/docs/contracts)
 
 # Installation
 
-    yarn add "@animeswap.org/v1-sdk"
+    yarn add "@Financer.org/v1-sdk"
 
 # Usage Example
 ### Init SDK
 ```typescript
-import { SDK } from '@animeswap.org/v1-sdk';
+import { SDK } from '@Financer.org/v1-sdk';
 
 const sdk = new SDK('https://fullnode.devnet.aptoslabs.com', NetworkType.Devnet)
 ```

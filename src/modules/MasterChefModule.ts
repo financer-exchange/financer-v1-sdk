@@ -10,7 +10,7 @@ import {
   composeLPCoin,
   composeLP,
   composeCoinStore,
-  composeANIRegister,
+  composeFINRegister,
 } from '../utils/contractComposeType'
 import {
   AptosCoinInfoResource,
@@ -54,7 +54,7 @@ export type StakeLPCoinPayload = {
   method: 'deposit' | 'withdraw'
 }
 
-export type StakeANIPayload = {
+export type StakeFINPayload = {
   amount: AptosResourceType
   method: 'enter_staking' | 'leave_staking'
 }
@@ -62,12 +62,12 @@ export type StakeANIPayload = {
 export type StakedLPInfo = {
   apr: Decimal      // staked apr
   lpAmount: Decimal // staked amount
-  lp2AniAmount: Decimal // staked LP to ANI amount
+  lp2AniAmount: Decimal // staked LP to FIN amount
   coinX?: Decimal   // staked coinX amount
   coinY?: Decimal   // staked coinY amount
 }
 
-const ACC_ANI_PRECISION = 1e12
+const ACC_FIN_PRECISION = 1e12
 
 export class MasterChefModule implements IModule {
   protected _sdk: SDK
@@ -165,8 +165,8 @@ export class MasterChefModule implements IModule {
   /**
    * Return the staking coin info for a given address
    * @param userAddress address
-   * @param coinType coinType, including `ANI` or `LPCoin<X, Y>`
-   * @returns UserInfoReturn, {stakingAmount, pendingANI}
+   * @param coinType coinType, including `FIN` or `LPCoin<X, Y>`
+   * @returns UserInfoReturn, {stakingAmount, pendingFIN}
    */
   async getUserInfoByCoinType(userAddress: AptosResourceType, coinType: AptosResourceType): Promise<UserInfoReturn> {
     const { modules } = this.sdk.networkOptions
@@ -192,7 +192,7 @@ export class MasterChefModule implements IModule {
   /**
    * Return all the staking coin infos for a given address
    * @param userAddress address
-   * @returns a map, contains: LPCoin -> {stakingAmount, pendingANI}
+   * @returns a map, contains: LPCoin -> {stakingAmount, pendingFIN}
    */
   async getUserInfoAll(userAddress: AptosResourceType): Promise<Map<string, UserInfoReturn>> {
     const { modules } = this.sdk.networkOptions
@@ -244,7 +244,7 @@ export class MasterChefModule implements IModule {
 
   /**
    * Adhoc method
-   * Return StakedLPInfo of `ANI` and `LPCoin<APT, ANI>`
+   * Return StakedLPInfo of `FIN` and `LPCoin<APT, FIN>`
    * @returns 
    */
   async getFirstTwoPairStakedLPInfo() : Promise<Array<StakedLPInfo>> {
@@ -252,7 +252,7 @@ export class MasterChefModule implements IModule {
     const mcData = await this.getMasterChefData()
     const ani = modules.FinAddress
     const zUSDC = this.sdk.networkOptions.coins.zUSDC
-    // <APT, ANI>
+    // <APT, FIN>
     const pair: CoinPair = {
       coinX: this.sdk.networkOptions.nativeCoin,
       coinY: ani,
@@ -298,35 +298,35 @@ export class MasterChefModule implements IModule {
     const lpSupply = coinInfoResponse.data.supply.vec[0].integer.vec[0].value // lp total supply
     const lpSupplyAPTzUSDC = coinInfoAPTzUSDCResponse.data.supply.vec[0].integer.vec[0].value // lp total supply
     const stakedLPCoin = lpCoinPoolInfoResponse.coin_reserve.value  // staked LP Coin amount
-    const stakedANI = aniPoolInfoResponse.coin_reserve.value  // staked ANI amount
+    const stakedFIN = aniPoolInfoResponse.coin_reserve.value  // staked FIN amount
     const stakedLPCoinAPTzUSDC = lpCoinAPTzUSDCPoolInfoResponse.coin_reserve.value  // staked LP Coin amount
-    // staked lpCoin value equals to ANI amount value
-    const lpCoinValue2ANI = d(stakedLPCoin).div(d(lpSupply)).mul(d(swapPoolResponse.data.coin_y_reserve.value)).mul(2)
-    const apt2ANI = d(swapPoolResponse.data.coin_y_reserve.value).div(d(swapPoolResponse.data.coin_x_reserve.value))
-    const lpCoinAPTzUSDCValue2ANI = d(stakedLPCoinAPTzUSDC).div(d(lpSupplyAPTzUSDC)).mul(d(swapPoolAPTzUSDCResponse.data.coin_x_reserve.value)).mul(2).mul(apt2ANI)
+    // staked lpCoin value equals to FIN amount value
+    const lpCoinValue2FIN = d(stakedLPCoin).div(d(lpSupply)).mul(d(swapPoolResponse.data.coin_y_reserve.value)).mul(2)
+    const apt2FIN = d(swapPoolResponse.data.coin_y_reserve.value).div(d(swapPoolResponse.data.coin_x_reserve.value))
+    const lpCoinAPTzUSDCValue2FIN = d(stakedLPCoinAPTzUSDC).div(d(lpSupplyAPTzUSDC)).mul(d(swapPoolAPTzUSDCResponse.data.coin_x_reserve.value)).mul(2).mul(apt2FIN)
 
-    // ANI stake only
-    const interestANI1 = d(mcData.per_second_ANI).mul(d(aniPoolInfoResponse.alloc_point)).div(d(mcData.total_alloc_point)).mul(d(100).sub(mcData.dao_percent)).div(d(100)).mul(YEAR_S)
-    const aprANI = interestANI1.div(stakedANI)
+    // FIN stake only
+    const interestFIN1 = d(mcData.per_second_FIN).mul(d(aniPoolInfoResponse.alloc_point)).div(d(mcData.total_alloc_point)).mul(d(100).sub(mcData.dao_percent)).div(d(100)).mul(YEAR_S)
+    const aprFIN = interestFIN1.div(stakedFIN)
 
-    // APT-ANI
-    const interestANI2 = d(mcData.per_second_ANI).mul(d(lpCoinPoolInfoResponse.alloc_point)).div(d(mcData.total_alloc_point)).mul(d(100).sub(mcData.dao_percent)).div(d(100)).mul(YEAR_S)
-    const aprLPCoin = interestANI2.div(lpCoinValue2ANI)
+    // APT-FIN
+    const interestFIN2 = d(mcData.per_second_FIN).mul(d(lpCoinPoolInfoResponse.alloc_point)).div(d(mcData.total_alloc_point)).mul(d(100).sub(mcData.dao_percent)).div(d(100)).mul(YEAR_S)
+    const aprLPCoin = interestFIN2.div(lpCoinValue2FIN)
 
     // APT-zUSDC
-    const interestANI3 = d(mcData.per_second_ANI).mul(d(lpCoinAPTzUSDCPoolInfoResponse.alloc_point)).div(d(mcData.total_alloc_point)).mul(d(100).sub(mcData.dao_percent)).div(d(100)).mul(YEAR_S)
-    const aprLPCoinAPTzUSDC = interestANI3.div(lpCoinAPTzUSDCValue2ANI)
+    const interestFIN3 = d(mcData.per_second_FIN).mul(d(lpCoinAPTzUSDCPoolInfoResponse.alloc_point)).div(d(mcData.total_alloc_point)).mul(d(100).sub(mcData.dao_percent)).div(d(100)).mul(YEAR_S)
+    const aprLPCoinAPTzUSDC = interestFIN3.div(lpCoinAPTzUSDCValue2FIN)
 
     const stakedAniReturn: StakedLPInfo = {
-      apr: aprANI,
-      lpAmount: d(stakedANI),
-      lp2AniAmount: d(stakedANI),
+      apr: aprFIN,
+      lpAmount: d(stakedFIN),
+      lp2AniAmount: d(stakedFIN),
     }
 
     const stakedLPCoinReturn: StakedLPInfo = {
       apr: aprLPCoin,
       lpAmount: d(stakedLPCoin),
-      lp2AniAmount: d(lpCoinValue2ANI),
+      lp2AniAmount: d(lpCoinValue2FIN),
       coinX: d(stakedLPCoin).div(d(lpSupply)).mul(d(swapPoolResponse.data.coin_x_reserve.value)),
       coinY: d(stakedLPCoin).div(d(lpSupply)).mul(d(swapPoolResponse.data.coin_y_reserve.value)),
     }
@@ -334,7 +334,7 @@ export class MasterChefModule implements IModule {
     const stakedLPCoinAPTzUSDCReturn: StakedLPInfo = {
       apr: aprLPCoinAPTzUSDC,
       lpAmount: d(stakedLPCoinAPTzUSDC),
-      lp2AniAmount: d(lpCoinAPTzUSDCValue2ANI),
+      lp2AniAmount: d(lpCoinAPTzUSDCValue2FIN),
       coinX: d(stakedLPCoinAPTzUSDC).div(d(lpSupplyAPTzUSDC)).mul(d(swapPoolAPTzUSDCResponse.data.coin_x_reserve.value)),
       coinY: d(stakedLPCoinAPTzUSDC).div(d(lpSupplyAPTzUSDC)).mul(d(swapPoolAPTzUSDCResponse.data.coin_y_reserve.value)),
     }
@@ -343,11 +343,11 @@ export class MasterChefModule implements IModule {
   }
 
   /**
-   * Check if the given address is registered ANI
+   * Check if the given address is registered FIN
    * @param address address to check
    * @returns bool
    */
-  async checkRegisteredANI(address: AptosResourceType): Promise<boolean> {
+  async checkRegisteredFIN(address: AptosResourceType): Promise<boolean> {
     const { modules } = this.sdk.networkOptions
     const coinStoreLP = composeCoinStore(modules.CoinStore, modules.FinAddress)
     try {
@@ -359,9 +359,9 @@ export class MasterChefModule implements IModule {
     }
   }
 
-  // Register ANI payload
-  registerANIPayload(): Payload {
-    const functionName = composeANIRegister(this.sdk.networkOptions.modules.FinAddress)
+  // Register FIN payload
+  registerFINPayload(): Payload {
+    const functionName = composeFINRegister(this.sdk.networkOptions.modules.FinAddress)
 
     return {
       type: 'entry_function_payload',
@@ -397,15 +397,15 @@ export class MasterChefModule implements IModule {
   }
 
   /**
-   * Enter_staking/leave_staking ANI payload
-   * Equal to Deposit/withdraw method with type args `ANI`
+   * Enter_staking/leave_staking FIN payload
+   * Equal to Deposit/withdraw method with type args `FIN`
    * @param param0 
    * @returns 
    */
-  stakeANIPayload({
+  stakeFINPayload({
     amount,
     method,
-  }: StakeANIPayload): Payload {
+  }: StakeFINPayload): Payload {
     const { modules } = this.sdk.networkOptions
     const functionName = composeType(modules.MasterChefScripts, method)
     const args = [amount.toString()]
@@ -425,16 +425,16 @@ function aptosTypeInfo2AptosResourceType(params: AptosTypeInfo): AptosResourceTy
 
 function meta2UserInfoReturn(poolInfo: MasterChefPoolInfo, userInfo: MasterChefUserInfo, mcData: MasterChefData): UserInfoReturn {
   const stakedTotal = poolInfo.coin_reserve.value
-  // calculate pending ANI
+  // calculate pending FIN
   const currentTimestamp = Math.floor(Date.now() / 1000)
   // let multipler = get_multiplier(pool.last_reward_timestamp, get_current_timestamp());
   const multipler = d(currentTimestamp).sub(d(poolInfo.last_reward_timestamp))
-  // let reward_ANI = multipler * mc_data.per_second_ANI * (pool.alloc_point as u128) / (mc_data.total_alloc_point as u128) * ((100 - mc_data.dao_percent) as u128) / 100u128;
-  const rewardAni = multipler.mul(mcData.per_second_ANI).mul(d(poolInfo.alloc_point)).div(d(mcData.total_alloc_point)).mul(d(100).sub(mcData.dao_percent)).div(d(100))
-  // pool.acc_ANI_per_share = pool.acc_ANI_per_share + reward_ANI * ACC_ANI_PRECISION / (staked_total as u128);
-  const accAniPerShare = d(poolInfo.acc_ANI_per_share).add(rewardAni.mul(d(ACC_ANI_PRECISION)).div(d(stakedTotal)))
-  // let pending = (user_info.amount as u128) * pool.acc_ANI_per_share / ACC_ANI_PRECISION - user_info.reward_debt;
-  const pendingAni = d(userInfo.amount).mul(accAniPerShare).div(d(ACC_ANI_PRECISION)).sub(d(userInfo.reward_debt))
+  // let reward_FIN = multipler * mc_data.per_second_FIN * (pool.alloc_point as u128) / (mc_data.total_alloc_point as u128) * ((100 - mc_data.dao_percent) as u128) / 100u128;
+  const rewardAni = multipler.mul(mcData.per_second_FIN).mul(d(poolInfo.alloc_point)).div(d(mcData.total_alloc_point)).mul(d(100).sub(mcData.dao_percent)).div(d(100))
+  // pool.acc_FIN_per_share = pool.acc_FIN_per_share + reward_FIN * ACC_FIN_PRECISION / (staked_total as u128);
+  const accAniPerShare = d(poolInfo.acc_FIN_per_share).add(rewardAni.mul(d(ACC_FIN_PRECISION)).div(d(stakedTotal)))
+  // let pending = (user_info.amount as u128) * pool.acc_FIN_per_share / ACC_FIN_PRECISION - user_info.reward_debt;
+  const pendingAni = d(userInfo.amount).mul(accAniPerShare).div(d(ACC_FIN_PRECISION)).sub(d(userInfo.reward_debt))
 
   return {
     amount: d(userInfo.amount),
